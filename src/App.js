@@ -5,9 +5,19 @@ function Square({ value, onSquareClick }) {
     return <button className="square" onClick={onSquareClick}>{value}</button>
 }
 
-export default function Board() {
-    const [xIsNext, setXIsNext] = useState(true);
+export default function Game() {
     const [squares, setSquares] = useState(Array(9).fill(null));
+
+    return(
+        <>
+        <Board squares={squares} setSquares={setSquares}/>
+        </>
+    )
+}
+
+function Board({squares, setSquares}) {
+    const [xIsNext, setXIsNext] = useState(true);
+
     const winner = calculateWinner(squares);
     let status;
     if (winner) {
