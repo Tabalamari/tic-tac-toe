@@ -1,25 +1,31 @@
 import { useState } from 'react';
 
 export default function Game() {
-    // const [squares, setSquares] = useState(Array(9).fill(null));
+    const [xIsNext, setXIsNext] = useState(true);
     const [history, setHistory] = useState([Array(9).fill(null)]);
-    function changeBoard(newBoard) {
-        console.log(history, "Its history")
-        console.log(newBoard)
-        const newHistory = history.slice();
-        setHistory(newHistory.push(newBoard))
+    const currentSquares = history[history.length - 1];
+
+    function handlePlay(nextSquares) {
+        setHistory([...history, nextSquares]);
+        setXIsNext(!xIsNext);
     }
     return (
         <>
-            <Board squaresOfBoard={history[0]} setSquares={changeBoard} />
-        </>
+            <div className="game">
+                <div className="game-board">
+                    <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
+                </div>
+                <div className="game-info">
+                    <ol>{/*TODO*/}</ol>
+                </div>
+            </div>        </>
     )
 }
 
-function Board({ squaresOfBoard, setSquares }) {
-    const [xIsNext, setXIsNext] = useState(true);
-console.log(squaresOfBoard, "adsgsdgsthrstt")
-    const winner = calculateWinner(squaresOfBoard);
+function Board({ xIsNext, squares, onPlay }) {
+    // const [squares, setSquares] = useState(Array(9).fill(null));
+    // const [xIsNext, setXIsNext] = useState(true);
+    const winner = calculateWinner(squares);
     let status;
     if (winner) {
         status = "Winner: " + winner;
@@ -28,37 +34,38 @@ console.log(squaresOfBoard, "adsgsdgsthrstt")
     }
     function handleClick(i) {
         if (
-            squaresOfBoard[i] || calculateWinner(squaresOfBoard)
+            squares[i] || calculateWinner(squares)
         ) {
             return;
         }
-        const nextSquares = squaresOfBoard.slice();
+        const nextSquares = squares.slice();
         if (xIsNext) {
             nextSquares[i] = "X";
         } else {
             nextSquares[i] = "O";
         }
-        setSquares(nextSquares);
-        setXIsNext(!xIsNext);
+        onPlay(nextSquares);
+        // setSquares(nextSquares);
+        // setXIsNext(!xIsNext);
     }
 
     return (
         <>
             <div className='status'>{status}</div>
             <div className="board-row">
-                <Square value={squaresOfBoard[0]} onSquareClick={() => handleClick(0)} />
-                <Square value={squaresOfBoard[1]} onSquareClick={() => handleClick(1)} />
-                <Square value={squaresOfBoard[2]} onSquareClick={() => handleClick(2)} />
+                <Square value={squares[0]} onSquareClick={() => handleClick(0)} />
+                <Square value={squares[1]} onSquareClick={() => handleClick(1)} />
+                <Square value={squares[2]} onSquareClick={() => handleClick(2)} />
             </div>
             <div className="board-row">
-                <Square value={squaresOfBoard[3]} onSquareClick={() => handleClick(3)} />
-                <Square value={squaresOfBoard[4]} onSquareClick={() => handleClick(4)} />
-                <Square value={squaresOfBoard[5]} onSquareClick={() => handleClick(5)} />
+                <Square value={squares[3]} onSquareClick={() => handleClick(3)} />
+                <Square value={squares[4]} onSquareClick={() => handleClick(4)} />
+                <Square value={squares[5]} onSquareClick={() => handleClick(5)} />
             </div>
             <div className="board-row">
-                <Square value={squaresOfBoard[6]} onSquareClick={() => handleClick(6)} />
-                <Square value={squaresOfBoard[7]} onSquareClick={() => handleClick(7)} />
-                <Square value={squaresOfBoard[8]} onSquareClick={() => handleClick(8)} />
+                <Square value={squares[6]} onSquareClick={() => handleClick(6)} />
+                <Square value={squares[7]} onSquareClick={() => handleClick(7)} />
+                <Square value={squares[8]} onSquareClick={() => handleClick(8)} />
             </div>
         </>
     )
